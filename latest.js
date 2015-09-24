@@ -28,13 +28,13 @@
         var SELF = this;
 
         SELF.settings = $.extend( {}, Fancy.settings[ NAME ], settings );
-
-        SELF.visible = false;
+        delete SELF.settings.templates;
+        SELF.visible  = false;
         if ( !logged ) {
             logged = true;
             Fancy.version( SELF );
         }
-        SELF.list      = list;
+        SELF.list      = list || [];
         SELF.element   = element;
         SELF.version   = VERSION;
         SELF.name      = NAME;
@@ -275,6 +275,7 @@
         downClass   : "",
         upText      : "Up",
         downText    : "Down",
+        templates   : { "buttonText": template, "buttonClass": templateIcon, "drag": templateDrag },
         onChange    : function () {}
     };
 
