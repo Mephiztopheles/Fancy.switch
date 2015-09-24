@@ -152,7 +152,7 @@
             if ( !item.find( SELF.settings.upSelector ).length && !SELF.settings.drag ) {
                 if ( SELF.settings.upSelector.indexOf( "." ) === 0 ) {
                     $el = $( "<div/>", {
-                        class: SELF.settings.upSelector.substr( 1 )
+                        "class": SELF.settings.upSelector.substr( 1 )
                     } );
                 } else {
                     $el = $( "<" + SELF.settings.upSelector + "/>" );
@@ -166,7 +166,7 @@
             if ( !item.find( SELF.settings.downSelector ).length && !SELF.settings.drag ) {
                 if ( SELF.settings.downSelector.indexOf( "." ) === 0 ) {
                     $el = $( "<div/>", {
-                        class: SELF.settings.downSelector.substr( 1 )
+                        "class": SELF.settings.downSelector.substr( 1 )
                     } );
                 } else {
                     $el = $( "<" + SELF.settings.downSelector + "/>" );
