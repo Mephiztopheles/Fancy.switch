@@ -1,0 +1,45 @@
+{
+  "name": "fancy-switch",
+  "title": "FancySwith",
+  "description": "JavaScript List-Arrangement-Plugin for Fancy",
+  "version": "1.0.10",
+  "main": "fancydate.js",
+  "homepage": "http://mephiztopheles.wtf/fancy-switch",
+  "authors": [
+    {
+      "name": "Markus Ahrweiler",
+      "email": "markus.ahrweiler@web.de",
+      "homepage": "mephiztopheles.wtf"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Mephiztopheles/Fancy.switch.git"
+  },
+  "ignore": [
+    "source",
+    "spec",
+    ".bowerrc",
+    ".gitignore",
+    ".jshintignore",
+    ".jshintrc",
+    "bower.json",
+    "gruntfile.js",
+    "README.md"
+  ],
+  "keywords": [
+    "fancyswith",
+    "listmanager",
+    "javascript",
+    "browser",
+    "library"
+  ],
+  "bugs": {
+    "url": "https://github.com/Mephiztopheles/Fancy.date/issues"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "jquery": ">=1.9.1",
+    "fancy": ">= 1.0.7"
+  }
+}
