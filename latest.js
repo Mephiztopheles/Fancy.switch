@@ -1,24 +1,38 @@
 (function ( window, $ ) {
-    Fancy.require( { jQuery: false, Fancy: "1.0.1" } );
-    var NAME     = "FancySwitch", VERSION = "1.0.2", logged = false;
-    var template = '<div class="FancySwitch-item">#name#<div class="FancySwitch-up">$upText$</div><div class="FancySwitch-down">$downText$</div></div>', templateIcon = '<div class="FancySwitch-item">#name#<div class="FancySwitch-up $upClass$"></div><div class="FancySwitch-down $downClass$"></div></div>', templateDrag = '<div class="FancySwitch-item">#name#</div>';
 
-    function preventSelect( el ) {return el.on( "selectstart", false ).attr( 'unselectable', "on" ).css( "userSelect", "none" )}
+    Fancy.require( {
+        jQuery: false,
+        Fancy : "1.0.1"
+    } );
+    var NAME    = "FancySwitch",
+        VERSION = "1.0.2",
+        logged  = false;
+
+
+    var template     = '<div class="FancySwitch-item">#name#<div class="FancySwitch-up">$upText$</div><div class="FancySwitch-down">$downText$</div></div>',
+        templateIcon = '<div class="FancySwitch-item">#name#<div class="FancySwitch-up $upClass$"></div><div class="FancySwitch-down $downClass$"></div></div>',
+        templateDrag = '<div class="FancySwitch-item">#name#</div>';
+
+    function preventSelect( el ) {
+        return el.on( "selectstart", false ).attr( 'unselectable', "on" ).css( "userSelect", "none" );
+    }
+
 
     function swapArrayElements( arr, indexA, indexB ) {
         var temp      = arr[ indexA ];
         arr[ indexA ] = arr[ indexB ];
-        arr[ indexB ] = temp
+        arr[ indexB ] = temp;
     }
 
     function FancySwitch( element, settings, list ) {
-        var SELF      = this;
+        var SELF = this;
+
         SELF.settings = $.extend( {}, Fancy.settings[ NAME ], settings );
         delete SELF.settings.templates;
         SELF.visible  = false;
         if ( !logged ) {
             logged = true;
-            Fancy.version( SELF )
+            Fancy.version( SELF );
         }
         SELF.list      = list || [];
         SELF.element   = element;
@@ -26,17 +40,38 @@
         SELF.name      = NAME;
         SELF.items     = SELF.element.find( SELF.settings.itemSelector );
         SELF.animating = false;
-        if ( !SELF.list.length ) {SELF.element.on( "DOMNodeInserted." + NAME + "DOMNodeRemoved." + NAME, function () {if ( SELF.element.find( SELF.settings.itemSelector ).length != SELF.items.length )SELF.update()} )} else {
+
+        if ( !SELF.list.length ) {
+            SELF.element.on( "DOMNodeInserted." + NAME + "DOMNodeRemoved." + NAME, function () {
+                if ( SELF.element.find( SELF.settings.itemSelector ).length != SELF.items.length )
+                    SELF.update();
+            } );
+        } else {
             if ( !SELF.settings.template ) {
-                if ( SELF.settings.drag ) {SELF.settings.template = templateDrag} else if ( SELF.settings.upText && SELF.settings.downText ) {SELF.settings.template = template} else if ( SELF.settings.upClass && SELF.settings.downClass ) {SELF.settings.template = templateIcon}
-                if ( !SELF.settings.template ) {throw"Error: could not define template"}
+                if ( SELF.settings.drag ) {
+                    SELF.settings.template = templateDrag;
+                } else if ( SELF.settings.upText && SELF.settings.downText ) {
+                    SELF.settings.template = template;
+                } else if ( SELF.settings.upClass && SELF.settings.downClass ) {
+                    SELF.settings.template = templateIcon;
+                }
+                if ( !SELF.settings.template ) {
+                    throw "Error: could not define template";
+                }
             }
         }
         SELF.element.addClass( NAME + "-element" );
-        if ( SELF.settings.drag ) {SELF.element.addClass( NAME + "-draggable" )}
+
+
+        if ( SELF.settings.drag ) {
+            SELF.element.addClass( NAME + "-draggable" );
+        }
+
         SELF.process();
-        return SELF
+
+        return SELF;
     }
+
 
     FancySwitch.api = FancySwitch.prototype = {};
     FancySwitch.api.version = VERSION;
@@ -46,21 +81,29 @@
         var prev = item.prev();
         if ( prev.length ) {
             var index = SELF.items.index( item );
-            if ( SELF.list.length ) {swapArrayElements( SELF.list, index, index - 1 )}
+            if ( SELF.list.length ) {
+                swapArrayElements( SELF.list, index, index - 1 );
+            }
             if ( animated === false || SELF.settings.animated === false ) {
                 item.insertBefore( prev );
                 SELF.items = SELF.element.find( SELF.settings.itemSelector );
-                SELF.settings.onChange.call( SELF, index, index - 1 )
+                SELF.settings.onChange.call( SELF, index, index - 1 );
             } else if ( !SELF.animating ) {
                 SELF.animating = !SELF.animating;
-                item.css( "position", "relative" ).animate( { top: "-" + prev.height() + "px" }, 500, function () {item.css( "position", item.data( "position" ) ).css( "top", item.data( "top" ) )} );
-                prev.css( "position", "relative" ).animate( { top: "+" + item.height() + "px" }, 500, function () {
+                item.css( "position", "relative" ).animate( {
+                    top: "-" + prev.height() + "px"
+                }, 500, function () {
+                    item.css( "position", item.data( "position" ) ).css( "top", item.data( "top" ) );
+                } );
+                prev.css( "position", "relative" ).animate( {
+                    top: "+" + item.height() + "px"
+                }, 500, function () {
                     prev.css( "position", prev.data( "position" ) ).css( "top", prev.data( "top" ) );
                     item.insertBefore( prev );
                     SELF.animating = !SELF.animating;
                     SELF.items     = SELF.element.find( SELF.settings.itemSelector );
-                    SELF.settings.onChange.call( SELF, index, index - 1 )
-                } )
+                    SELF.settings.onChange.call( SELF );
+                } );
             }
         }
     };
@@ -69,52 +112,91 @@
         var next = item.next();
         if ( item.next().length ) {
             var index = SELF.items.index( item );
-            if ( SELF.list.length ) {swapArrayElements( SELF.list, index, index + 1 )}
+            if ( SELF.list.length ) {
+                swapArrayElements( SELF.list, index, index + 1 );
+            }
             if ( animated === false || SELF.settings.animated === false ) {
                 item.insertAfter( next );
                 SELF.items = SELF.element.find( SELF.settings.itemSelector );
-                SELF.settings.onChange.call( SELF, index, index + 1 )
+                SELF.settings.onChange.call( SELF, index, index + 1 );
             } else if ( !SELF.animating ) {
                 SELF.animating = !SELF.animating;
-                item.css( "position", "relative" ).animate( { top: "+" + next.height() + "px" }, 500, function () {item.css( "position", item.data( "position" ) ).css( "top", item.data( "top" ) )} );
-                next.css( "position", "relative" ).animate( { top: "-" + item.height() + "px" }, 500, function () {
+                item.css( "position", "relative" ).animate( {
+                    top: "+" + next.height() + "px"
+                }, 500, function () {
+                    item.css( "position", item.data( "position" ) ).css( "top", item.data( "top" ) );
+                } );
+                next.css( "position", "relative" ).animate( {
+                    top: "-" + item.height() + "px"
+                }, 500, function () {
                     next.css( "position", next.data( "position" ) ).css( "top", next.data( "top" ) );
                     item.insertAfter( next );
                     SELF.animating = !SELF.animating;
                     SELF.items     = SELF.element.find( SELF.settings.itemSelector );
-                    SELF.settings.onChange.call( SELF, index, index + 1 );
-                } )
+                    SELF.settings.onChange.call( SELF );
+                } );
             }
         }
     };
     FancySwitch.api.update  = function () {
-        if ( !this.list.length )this.items = this.element.find( this.settings.itemSelector );
-        this.process()
+        if ( !this.list.length )
+            this.items = this.element.find( this.settings.itemSelector );
+        this.process();
     };
     FancySwitch.api.process = function () {
+
         function processTemplateItem( item ) {
+
             item.data( "processed", true ).data( "position", item.css( "position" ) === "static" ? "" : item.css( "position" ) ).data( "top", item.css( "top" ) === "auto" ? "" : item.css( "top" ) );
             var $el;
             if ( !item.find( SELF.settings.upSelector ).length && !SELF.settings.drag ) {
-                if ( SELF.settings.upSelector.indexOf( "." ) === 0 ) {$el = $( "<div/>", { class: SELF.settings.upSelector.substr( 1 ) } )} else {$el = $( "<" + SELF.settings.upSelector + "/>" )}
+                if ( SELF.settings.upSelector.indexOf( "." ) === 0 ) {
+                    $el = $( "<div/>", {
+                        class: SELF.settings.upSelector.substr( 1 )
+                    } );
+                } else {
+                    $el = $( "<" + SELF.settings.upSelector + "/>" );
+                }
                 $el.addClass( SELF.settings.upClass ).html( SELF.settings.upText );
-                item.append( $el )
-            } else if ( SELF.settings.drag ) {item.find( SELF.settings.upSelector ).remove()}
+
+                item.append( $el );
+            } else if ( SELF.settings.drag ) {
+                item.find( SELF.settings.upSelector ).remove();
+            }
             if ( !item.find( SELF.settings.downSelector ).length && !SELF.settings.drag ) {
-                if ( SELF.settings.downSelector.indexOf( "." ) === 0 ) {$el = $( "<div/>", { class: SELF.settings.downSelector.substr( 1 ) } )} else {$el = $( "<" + SELF.settings.downSelector + "/>" )}
+                if ( SELF.settings.downSelector.indexOf( "." ) === 0 ) {
+                    $el = $( "<div/>", {
+                        class: SELF.settings.downSelector.substr( 1 )
+                    } );
+                } else {
+                    $el = $( "<" + SELF.settings.downSelector + "/>" );
+                }
                 $el.addClass( SELF.settings.downClass ).html( SELF.settings.downText );
-                item.append( $el )
-            } else if ( SELF.settings.drag ) {item.find( SELF.settings.downSelector ).remove()}
+
+                item.append( $el );
+            } else if ( SELF.settings.drag ) {
+                item.find( SELF.settings.downSelector ).remove();
+            }
+
             if ( !SELF.settings.drag ) {
-                preventSelect( item.find( SELF.settings.upSelector ) ).click( function () {SELF.up( item )} );
-                preventSelect( item.find( SELF.settings.downSelector ) ).click( function () {SELF.down( item )} )
+                preventSelect( item.find( SELF.settings.upSelector ) ).click( function () {
+                    SELF.up( item );
+                } );
+
+                preventSelect( item.find( SELF.settings.downSelector ) ).click( function () {
+                    SELF.down( item );
+                } );
             } else {
                 item.addClass( NAME + "-draggable-item" );
                 var offset;
                 preventSelect( item ).on( "mousedown." + NAME, function ( e ) {
                     var clone;
+
                     if ( e.which === 1 ) {
-                        offset = { x: e.pageX - item.offset().left, y: e.pageY - item.offset().top };
+                        offset = {
+                            x: e.pageX - item.offset().left,
+                            y: e.pageY - item.offset().top
+                        };
                         $( document ).on( "mousemove." + NAME, function ( event ) {
                             if ( !clone ) {
                                 clone = item.clone();
@@ -122,26 +204,34 @@
                                 clone.css( {
                                     width : Fancy( item ).fullWidth(),
                                     zIndex: (parseInt( item.css( "zIndex" ) ) || 10) + 1
-                                } ).addClass( NAME + "-draggable-clone" )
+                                } ).addClass( NAME + "-draggable-clone" );
                             }
+
                             clone.css( {
                                 top : Math.min( SELF.items.last().position().top, Math.max( SELF.items.first().position().top, event.pageY - offset.y ) ),
                                 left: item.offset().left
                             } );
-                            if ( clone.position().top > item.position().top + (item.height() / 3 * 2) ) {SELF.down( item, false )} else if ( clone.position().top + (item.height() / 3 * 2) < item.position().top ) {SELF.up( item, false )}
+                            if ( clone.position().top > item.position().top + (item.height() / 3 * 2) ) {
+                                SELF.down( item, false );
+                            } else if ( clone.position().top + (item.height() / 3 * 2) < item.position().top ) {
+                                SELF.up( item, false );
+                            }
+
                         } ).on( "mouseup." + NAME, function ( event ) {
                             if ( event.which === 1 && clone ) {
-                                clone.animate( { top: item.position().top }, 300, function () {
+                                clone.animate( {
+                                    top: item.position().top
+                                }, 300, function () {
                                     clone.remove();
-                                    clone = null
+                                    clone = null;
                                 } );
-                                $( document ).off( "." + NAME )
+                                $( document ).off( "." + NAME );
                             } else if ( event.which === 1 ) {
                                 $( document ).off( "." + NAME );
                             }
-                        } )
+                        } );
                     }
-                } )
+                } );
             }
         }
 
@@ -150,16 +240,22 @@
             SELF.items.remove();
             SELF.items = SELF.element.find( SELF.settings.itemSelector );
             SELF.list.forEach( function ( it, i ) {
-                var item   = $( SELF.settings.template.replace( /#([^#]*)#/g, function ( match, $1 ) {return it[ $1 ]} ).replace( /\$([^$]*)\$/g, function ( match, $1 ) {return SELF.settings[ $1 ]} ) );
+                var item   = $( SELF.settings.template.replace( /#([^#]*)#/g, function ( match, $1 ) {
+                    return it[ $1 ];
+                } ).replace( /\$([^$]*)\$/g, function ( match, $1 ) {
+                    return SELF.settings[ $1 ];
+                } ) );
                 SELF.element.append( item );
                 SELF.items = SELF.items.add( item );
-                processTemplateItem( item )
-            } )
+                processTemplateItem( item );
+            } );
         } else {
             SELF.items.each( function () {
                 var item = $( this );
-                if ( !item.data( "processed" ) ) {processTemplateItem( item )}
-            } )
+                if ( !item.data( "processed" ) ) {
+                    processTemplateItem( item );
+                }
+            } );
         }
     };
     FancySwitch.api.destroy = function () {
@@ -169,10 +265,11 @@
             item.data( "processed", undefined ).data( "position", undefined ).data( "top", undefined );
             item.off( "." + NAME );
             item.find( SELF.settings.downSelector ).remove();
-            item.find( SELF.settings.upSelector ).remove()
+            item.find( SELF.settings.upSelector ).remove();
         } )
     };
-    Fancy.settings[ NAME ]  = {
+
+    Fancy.settings[ NAME ] = {
         drag        : false,
         animated    : true,
         itemSelector: ".FancySwitch-item",
@@ -185,6 +282,12 @@
         templates   : { "buttonText": template, "buttonClass": templateIcon, "drag": templateDrag },
         onChange    : function () {}
     };
-    Fancy.switch            = VERSION;
-    Fancy.api.switch        = function ( settings, list ) {return this.set( NAME, function ( el ) {return new FancySwitch( el, settings, list )} )}
+
+    Fancy.switch     = VERSION;
+    Fancy.api.switch = function ( settings, list ) {
+        return this.set( NAME, function ( el ) {
+            return new FancySwitch( el, settings, list );
+        } );
+    };
+
 })( window, jQuery );
