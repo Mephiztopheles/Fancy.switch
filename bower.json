@@ -2,8 +2,8 @@
   "name": "fancy-switch",
   "title": "FancySwith",
   "description": "JavaScript List-Arrangement-Plugin for Fancy",
-  "version": "1.0.10",
-  "main": "fancydate.js",
+  "version": "1.0.2",
+  "main": "fancyswitch.js",
   "homepage": "http://mephiztopheles.wtf/fancy-switch",
   "authors": [
     {
@@ -28,14 +28,14 @@
     "README.md"
   ],
   "keywords": [
-    "fancyswith",
+    "fancyswitch",
     "listmanager",
     "javascript",
     "browser",
     "library"
   ],
   "bugs": {
-    "url": "https://github.com/Mephiztopheles/Fancy.date/issues"
+    "url": "https://github.com/Mephiztopheles/Fancy.switch/issues"
   },
   "license": "MIT",
   "dependencies": {
