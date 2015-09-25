@@ -28,7 +28,7 @@
     }
 
     function swapArrayElements( arr, indexA, indexB ) {
-        var temp = arr[ indexA ];
+        var temp             = arr[ indexA ];
         arr[ indexA ]        = arr[ indexB ];
         arr[ indexB ]        = temp;
         arr[ indexA ].$index = indexA;
@@ -257,11 +257,11 @@
                 it.$index    = i;
                 var item;
                 var template = SELF.settings.template.replace( /\$([^$}]*)\$/g, function( match, $1 ) {
-                    return SELF.settings[ $1 ];
+                    return SELF.settings[ $1.trim() ];
                 } );
                 if( !Fancy.template ) {
                     template = template.replace( /\{\{([^\{}]*)\}\}/g, function( match, $1 ) {
-                        return it[ $1 ];
+                        return it[ $1.trim() ];
                     } );
                 }
                 item       = $( template );
