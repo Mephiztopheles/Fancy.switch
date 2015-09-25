@@ -237,8 +237,6 @@
 
         var SELF = this;
         if ( SELF.list.length ) {
-            SELF.items.remove();
-            SELF.items = SELF.element.find( SELF.settings.itemSelector );
             SELF.list.forEach( function ( it, i ) {
                 var item   = $( SELF.settings.template.replace( /#([^#]*)#/g, function ( match, $1 ) {
                     return it[ $1 ];
