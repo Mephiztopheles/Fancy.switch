@@ -188,8 +188,9 @@
                 } );
             } else {
                 item.addClass( NAME + "-draggable-item" );
-                var offset;
-                preventSelect( item ).on( "mousedown." + NAME, function ( e ) {
+                var offset,
+                    handler = SELF.settings.handler ? item.find( SELF.settings.handler ) : item
+                preventSelect( handler ).on( "mousedown." + NAME, function ( e ) {
                     var clone;
 
                     if ( e.which === 1 ) {
@@ -245,7 +246,7 @@
                 } ) );
                 SELF.element.append( item );
                 SELF.items = SELF.items.add( item );
-                processTemplateItem( item );
+                processTemplateItem( SELF.settings.handler ? item.find( SELF.settings.handler ) : item );
             } );
         } else {
             SELF.items.each( function () {
@@ -273,12 +274,13 @@
         itemSelector: ".FancySwitch-item",
         upSelector  : ".FancySwitch-up",
         downSelector: ".FancySwitch-down",
-        upClass     : "",
-        downClass   : "",
+        upClass     : false,
+        downClass   : false,
         upText      : "Up",
         downText    : "Down",
         templates   : { "buttonText": template, "buttonClass": templateIcon, "drag": templateDrag },
-        onChange    : function () {}
+        onChange    : function () {},
+        handler     : false
     };
 
     Fancy.switch     = VERSION;
