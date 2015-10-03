@@ -13,9 +13,6 @@
         templateIcon = '<div class="FancySwitch-item">{{name}}<div class="FancySwitch-up $upClass$"></div><div class="FancySwitch-down $downClass$"></div></div>',
         templateDrag = '<div class="FancySwitch-item">{{name}}</div>';
 
-    function preventSelect( el ) {
-        return el.on( "selectstart", false ).attr( 'unselectable', "on" ).css( "userSelect", "none" );
-    }
 
     function change( SELF, index, index2 ) {
 
@@ -194,21 +191,22 @@
             }
 
             if( !SELF.settings.drag ) {
-                preventSelect( item.find( SELF.settings.upSelector ) ).click( function() {
+                Fancy( item.find( SELF.settings.upSelector ) ).preventSelect().click( function() {
                     SELF.up( item );
                 } );
 
-                preventSelect( item.find( SELF.settings.downSelector ) ).click( function() {
+                Fancy( item.find( SELF.settings.downSelector ) ).preventSelect().click( function() {
                     SELF.down( item );
                 } );
             } else {
                 item.addClass( NAME + "-draggable-item" );
                 var offset,
                     handler = SELF.settings.handler ? item.find( SELF.settings.handler ) : item
-                preventSelect( handler ).on( "mousedown." + NAME, function( e ) {
+                Fancy( handler ).preventSelect().on( "mousedown." + NAME, function( e ) {
                     var clone;
 
                     if( e.which === 1 ) {
+                        Fancy( $( "body" ) ).preventSelect();
                         offset = {
                             x: e.pageX - item.offset().left,
                             y: e.pageY - item.offset().top
@@ -235,6 +233,7 @@
 
                         } ).on( "mouseup." + NAME, function( event ) {
                             if( event.which === 1 && clone ) {
+                                Fancy( "body" ).allowSelect();
                                 clone.animate( {
                                     top: item.offset().top
                                 }, 300, function() {
