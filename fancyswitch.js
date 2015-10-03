@@ -227,9 +227,9 @@
                                 top : Math.min( SELF.items.last().offset().top, Math.max( SELF.items.first().offset().top, event.pageY - offset.y ) ),
                                 left: item.offset().left
                             } );
-                            if( clone.position().top > item.position().top + (item.height() / 3 * 2) ) {
+                            if( clone.offset().top > item.offset().top + (item.height() / 3 * 2) ) {
                                 SELF.down( item, false );
-                            } else if( clone.position().top + (item.height() / 3 * 2) < item.position().top ) {
+                            } else if( clone.offset().top + (item.height() / 3 * 2) < item.offset().top ) {
                                 SELF.up( item, false );
                             }
 
