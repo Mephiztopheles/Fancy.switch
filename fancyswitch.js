@@ -224,7 +224,7 @@
                             }
 
                             clone.css( {
-                                top : Math.min( SELF.items.last().position().top, Math.max( SELF.items.first().position().top, event.pageY - offset.y ) ),
+                                top : Math.min( SELF.items.last().offset().top, Math.max( SELF.items.first().offset().top, event.pageY - offset.y ) ),
                                 left: item.offset().left
                             } );
                             if( clone.position().top > item.position().top + (item.height() / 3 * 2) ) {
