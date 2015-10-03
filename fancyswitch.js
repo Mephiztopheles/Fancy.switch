@@ -236,7 +236,7 @@
                         } ).on( "mouseup." + NAME, function( event ) {
                             if( event.which === 1 && clone ) {
                                 clone.animate( {
-                                    top: item.position().top
+                                    top: item.offset().top
                                 }, 300, function() {
                                     clone.remove();
                                     clone = null;
