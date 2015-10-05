@@ -8,11 +8,9 @@
         VERSION = "1.0.2",
         logged  = false;
 
-
     var template     = '<div class="FancySwitch-item">{{name}}<div class="FancySwitch-up">$upText$</div><div class="FancySwitch-down">$downText$</div></div>',
         templateIcon = '<div class="FancySwitch-item">{{name}}<div class="FancySwitch-up $upClass$"></div><div class="FancySwitch-down $downClass$"></div></div>',
         templateDrag = '<div class="FancySwitch-item">{{name}}</div>';
-
 
     function change( SELF, index, index2 ) {
 
@@ -201,7 +199,7 @@
             } else {
                 item.addClass( NAME + "-draggable-item" );
                 var offset,
-                    handler = SELF.settings.handler ? item.find( SELF.settings.handler ) : item
+                    handler = SELF.settings.handler ? item.find( SELF.settings.handler ) : item;
                 Fancy( handler ).preventSelect().on( "mousedown." + NAME, function( e ) {
                     var clone;
 
