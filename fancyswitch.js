@@ -36,6 +36,10 @@
 
         SELF.settings = $.extend( {}, Fancy.settings[ NAME ], settings );
         delete SELF.settings.templates;
+        if ( SELF.settings.clonePosition != "offset" && SELF.settings.clonePosition != "position" ) {
+            SELF.settings.clonePosition = "offset"
+        }
+        SELF.settings.itemSelector += ":not(." + NAME + "-draggable-clone)";
         SELF.visible = false;
         if ( !logged ) {
             logged = true;
@@ -203,15 +207,20 @@
             } else {
                 item.addClass( NAME + "-draggable-item" );
                 var offset,
+                    position,
                     handler = SELF.settings.handler ? item.find( SELF.settings.handler ) : item;
                 Fancy( handler ).preventSelect().on( "mousedown." + NAME, function ( e ) {
                     var clone;
 
                     if ( e.which === 1 ) {
                         Fancy( $( "body" ) ).preventSelect();
-                        offset = {
+                        offset   = {
                             x: e.pageX - item.offset().left,
                             y: e.pageY - item.offset().top
+                        };
+                        position = {
+                            x: e.pageX - item.position().left,
+                            y: e.pageY - item.position().top
                         };
                         SELF.settings.onChangeStart.call( SELF );
                         $doc.on( "mousemove." + NAME, function ( event ) {
@@ -226,27 +235,45 @@
                                     width : Fancy( item ).fullWidth(),
                                     zIndex: (parseInt( item.css( "zIndex" ) ) || 10) + 1
                                 } ).addClass( NAME + "-draggable-clone" ).addClass( SELF.settings.cloneClass );
+                                if ( SELF.settings.compileClone ) {
+                                    SELF.settings.compileClone.call( SELF, clone, item );
+                                }
+                                var index = SELF.items.index( clone );
+                                if ( index > -1 ) {
+                                    SELF.items.splice( index, 1 );
+                                }
                             }
-
-                            clone.css( {
-                                top : Math.min( SELF.items.last().offset().top, Math.max( SELF.items.first().offset().top, event.pageY - offset.y ) ),
-                                left: item.offset().left
-                            } );
-                            if ( clone.offset().top > item.offset().top + (item.height() / 3 * 2) ) {
+                            if ( SELF.settings.clonePosition == "offset" ) {
+                                clone.css( {
+                                    top : Math.min( SELF.items.last().offset().top, Math.max( SELF.items.first().offset().top, event.pageY - offset.y ) ),
+                                    left: item.offset().left
+                                } );
+                            } else {
+                                clone.css( {
+                                    top : Math.min( SELF.items.last().position().top, Math.max( SELF.items.first().position().top, event.pageY - position.y ) ),
+                                    left: item.position().left
+                                } );
+                            }
+                            if ( clone[ SELF.settings.clonePosition ]().top > item[ SELF.settings.clonePosition ]().top + (item.height() / 3 * 2) ) {
                                 SELF.down( item, false );
-                            } else if ( clone.offset().top + (item.height() / 3 * 2) < item.offset().top ) {
+                            } else if ( clone[ SELF.settings.clonePosition ]().top + (item.height() / 3 * 2) < item[ SELF.settings.clonePosition ]().top ) {
                                 SELF.up( item, false );
                             }
                         } ).on( "mouseup." + NAME, function ( event ) {
                             if ( event.which === 1 ) {
                                 if ( clone ) {
                                     Fancy( "body" ).allowSelect();
-                                    clone.animate( {
-                                        top: item.offset().top
-                                    }, 300, function () {
+                                    if ( clone.css( "top" ) !== item[ SELF.settings.clonePosition ]().top ) {
+                                        clone.animate( {
+                                            top: item[ SELF.settings.clonePosition ]().top
+                                        }, 300, function () {
+                                            clone.remove();
+                                            clone = null;
+                                        } );
+                                    } else {
                                         clone.remove();
                                         clone = null;
-                                    } );
+                                    }
                                     $doc.off( "." + NAME );
                                 } else {
                                     $doc.off( "." + NAME );
@@ -309,7 +336,9 @@
         upClass      : false,
         downClass    : false,
         cloneAppendTo: "body",
+        compileClone : false,
         cloneClass   : false,
+        clonePosition: "offset",
         upText       : "Up",
         downText     : "Down",
         template     : false,
