@@ -220,7 +220,7 @@
                                 if ( Fancy.type( SELF.settings.cloneAppendTo ) == "string" ) {
                                     $( SELF.settings.cloneAppendTo ).append( clone );
                                 } else if ( Fancy.type( SELF.settings.cloneAppendTo ) == "function" ) {
-                                    SELF.settings.cloneAppendTo().append( clone );
+                                    SELF.settings.cloneAppendTo.call( SELF, item ).append( clone );
                                 }
                                 clone.css( {
                                     width : Fancy( item ).fullWidth(),
