@@ -217,9 +217,9 @@
                         $doc.on( "mousemove." + NAME, function ( event ) {
                             if ( !clone ) {
                                 clone = item.clone();
-                                if ( Fancy.type( SELF.settings.cloneAppendTo ) == "string" ) {
+                                if ( Fancy.getType( SELF.settings.cloneAppendTo ) == "string" ) {
                                     $( SELF.settings.cloneAppendTo ).append( clone );
-                                } else if ( Fancy.type( SELF.settings.cloneAppendTo ) == "function" ) {
+                                } else if ( Fancy.getType( SELF.settings.cloneAppendTo ) == "function" ) {
                                     SELF.settings.cloneAppendTo.call( SELF, item ).append( clone );
                                 }
                                 clone.css( {
