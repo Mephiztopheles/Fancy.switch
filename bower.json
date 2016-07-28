@@ -2,7 +2,7 @@
   "name": "fancy-switch",
   "title": "FancySwith",
   "description": "JavaScript List-Arrangement-Plugin for Fancy",
-  "version": "1.0.2",
+  "version": "1.1.1",
   "main": "fancyswitch.js",
   "homepage": "http://mephiztopheles.wtf/fancy-switch",
   "authors": [

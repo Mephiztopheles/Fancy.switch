@@ -5,7 +5,7 @@
         Fancy : "1.0.1"
     } );
     var NAME    = "FancySwitch",
-        VERSION = "1.1.0",
+        VERSION = "1.1.1",
         $doc    = $( document ),
         logged  = false;
 
@@ -214,6 +214,21 @@
 
                     if ( e.which === 1 ) {
                         Fancy( $( "body" ) ).preventSelect();
+                        var parent = Fancy.scrollParent( item );
+
+                        if ( parent && parent.length ) {
+                            var lastTop = parent[ 0 ].scrollTop;
+                            parent.on( "scroll." + NAME + " DOMMouseScroll." + NAME + " mousewheel." + NAME, function () {
+                                if ( lastTop < this.scrollTop ) {
+                                    position.y -= this.scrollTop - lastTop;
+                                    offset.y -= this.scrollTop - lastTop;
+                                } else {
+                                    position.y += lastTop - this.scrollTop;
+                                    offset.y += lastTop - this.scrollTop;
+                                }
+                                lastTop = this.scrollTop;
+                            } );
+                        }
                         offset   = {
                             x: e.pageX - item.offset().left,
                             y: e.pageY - item.offset().top
@@ -246,7 +261,7 @@
                             if ( SELF.settings.clonePosition == "offset" ) {
                                 clone.css( {
                                     top : Math.min( SELF.items.last().offset().top, Math.max( SELF.items.first().offset().top, event.pageY - offset.y ) ),
-                                    left: item.offset().left
+                                    left: item.offset().left - parent[ 0 ].scrollLeft
                                 } );
                             } else {
                                 clone.css( {
@@ -261,6 +276,7 @@
                             }
                         } ).on( "mouseup." + NAME, function ( event ) {
                             if ( event.which === 1 ) {
+                                parent.off( "." + NAME );
                                 if ( clone ) {
                                     Fancy( "body" ).allowSelect();
                                     if ( clone.css( "top" ) !== item[ SELF.settings.clonePosition ]().top ) {
